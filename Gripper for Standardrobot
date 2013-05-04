@@ -1,0 +1,136 @@
+/*
+Author: Jesse Stellmach
+Comment:
+         Aufgabe: Baue einen Greifarm, der eine Flasche greift und dann hinter eine schwarze Linie fährt
+         Programmierdatum: 4.5.13
+         
+        you'll need a lightsensor, touchsensor and 3 motors
+        2 motors for left and right, 1 motor for a gripper with included touchsensor   
+*/
+
+#define licht 40           // "licht", muss an Tisch angepasst werden
+int count;
+
+
+
+task main()
+{
+
+                            // Variablen definieren
+ count = 5;                 // Integer "count", Countdown am Anfang und Wartezeit am Ende
+
+
+ SetSensorLight(IN_1);      // Lichtsensor
+ SetSensorTouch(IN_2);      // Berührungssensor
+
+ TextOut(0, LCD_LINE3, "Start in");   // Displayanzeige Start
+ NumOut(0, LCD_LINE4, count);
+ repeat(5)
+ {
+ Wait(1000);
+ count -= 1;
+ }
+ ClearScreen();                         // Displayanzeige Ende
+
+ OnFwd(OUT_BC, 80);         // erste Linie überfahren
+ Wait(500);
+ Off(OUT_BC);
+
+  while(true)
+  {
+
+    TextOut(0, LCD_LINE1, "Schleife 1      An");
+
+    if(Sensor(IN_1) > licht)  // fährt bis zur schwarzen Linie
+    {
+      while(true)
+      {
+
+         TextOut(0, LCD_LINE2, "Schleife 2      An");
+
+         if(Sensor(IN_2) == 0) // wenn touchsensor nicht gedrückt ist fährt er
+         {
+          OnFwd(OUT_BC, 50);
+         }
+         else if(Sensor(IN_2) == 1) // greifer an
+         {
+          OnFwd(OUT_A, 50);
+          Wait(500);
+          Off(OUT_A);
+
+          while(true)
+           {
+            TextOut(0, LCD_LINE3, "Schleife 3      An");
+
+            if(Sensor(IN_1) > licht)  // fährt bis zur schwarzen linie
+            {
+             OnFwd(OUT_BC, 50);
+            }
+            else if(Sensor(IN_1) < licht) // wenn bei schwarzer Linie
+            {
+             OnFwd(OUT_BC, 25);          // fährt etwas über die schwarze Linie
+             Wait(250);
+             Off(OUT_BC);
+
+             OnRev(OUT_A, 50);           // öffnet Greifer
+             Wait(500);
+             Off(OUT_A);
+
+             OnRev(OUT_C, 50);           // Drehung
+             Wait(500);                  //
+             OnRev(OUT_B, 50);           //
+             Wait(500);                  //  Zeit der Drehungen
+             OnFwd(OUT_BC, 50);          //
+             Wait(1500);                 //     nochmal
+             Off(OUT_C);                 //    überprüfen
+             Wait(500);                  //
+             OnFwd(OUT_BC, 100);         //
+             Wait(1000);                 //
+             Off(OUT_BC);                //
+            }
+           }
+          }
+
+          ClearScreen();
+
+          TextOut(0, LCD_LINE1, "Schleife 1      Aus");
+          Wait(1000);
+          TextOut(0, LCD_LINE2, "Schleife 2      Aus");
+          Wait(1000);
+          TextOut(0, LCD_LINE3, "Schleife 3      Aus");
+          Wait(1000);
+          ClearScreen();
+
+          while(Sensor(IN_2) == 0)         // zum Weitermachen tochsensor drücken
+           {                               // Funktion eventuell rausnehmen
+
+            count += 1;
+
+            TextOut(0, LCD_LINE3, " Auf Touchsensor drücken,");
+            TextOut(0, LCD_LINE4, " um fortzufahren");
+            TextOut(0, LCD_LINE5, " Wartezeit:");
+            NumOut(0, LCD_LINE6, count);
+            TextOut(0, LCD_LINE7, " Sekunden");
+            Wait(1000);
+            ClearScreen();
+
+
+           }
+         }
+       }
+    else if(Sensor(IN_1) < licht)           // wenn auf schwarzer Linie
+    {
+     OnRev(OUT_C, 50);           // Drehung
+     Wait(500);                  //
+     OnRev(OUT_B, 50);           //
+     Wait(500);                  //  Zeit der Drehungen
+     OnFwd(OUT_BC, 50);          //
+     Wait(1500);                 //     nochmal
+     Off(OUT_C);                 //    überprüfen
+     Wait(500);                  //
+     OnFwd(OUT_BC, 100);         //
+     Wait(1000);                 //
+     Off(OUT_BC);                //
+    }
+  }
+}
