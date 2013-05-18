@@ -1,0 +1,59 @@
+/*
+Author: Jesse Stellmach
+Comment: Tischabräumer
+*/
+
+
+sub Ende()
+{
+while(true)
+{
+TextOut(0, LCD_LINE3, "Bitte beenden!");
+TextOut(0, LCD_LINE4, "Aufgabe fertiggestellt");
+Wait(1000);
+ClearScreen();
+}
+}
+
+task main()
+
+{
+ SetSensorTouch(IN_1);
+ SetSensorLight(IN_2);
+ 
+ OnFwdSync(OUT_BC, 70, 0);
+ Wait(500);
+ Off(OUT_BC);
+ 
+ while(Sensor(IN_1) == 0)
+ {
+  OnFwdSync(OUT_BC, 40, 0);
+  
+  if(Sensor(IN_1) == 1)
+  {
+   Off(OUT_BC);
+   OnFwd(OUT_A, 80);
+   Wait(150);
+   Off(OUT_A);
+   
+   OnFwdSync(OUT_BC, 40, 0);
+   
+   until(Sensor(IN_2) <= 40);
+   
+   Off(OUT_BC);
+   
+   OnRev(OUT_A, 100);
+   Wait(150);
+   Off(OUT_A);
+   Ende();
+
+  }
+  else if(Sensor(IN_2) <= 40)                       //Drehung
+  {
+   TextOut(0, LCD_LINE1, " Drehung");
+   OnRev(OUT_C, 100);
+   Wait(500);
+   Off(OUT_ABC);
+  }
+ }
+}
