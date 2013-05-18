@@ -1,0 +1,38 @@
+/*
+Author: Jesse Stellmach
+Comment: Additionsrechner   18.5.13 23:30
+*/
+
+int zahl1, zahl2, ergebnis;
+
+task main()
+{
+ SetSensorTouch(IN_1);
+ SetSensorTouch(IN_2);
+ zahl1 = 0;
+ zahl2 = 0;
+ ergebnis = 0;
+
+ while(true)
+ {
+  zahl1 += zahl2 = ergebnis;
+ 
+  TextOut(0, LCD_LINE1, "Calculator by Jesse");
+  TextOut(0, LCD_LINE2, "Rechnung:");
+  NumOut(0, LCD_LINE3, zahl1);
+  TextOut(0, LCD_LINE4, "+");
+  NumOut(0, LCD_LINE5, zahl2);
+  TextOut(0, LCD_LINE6, "=");
+  NumOut(0, LCD_LINE7, ergebnis);
+  
+  
+  if(Sensor(IN_1) == 1)
+  {
+   zahl1 += 1;
+  }
+  else if(Sensor(IN_2) == 1)
+  {
+   zahl2 += 1;
+  }
+ }
+}
