@@ -1,0 +1,30 @@
+/*
+Author: Jesse Stellmach
+Comment: Nicht vom Tisch fallen
+*/
+
+
+
+
+
+
+
+
+task main()
+{
+ SetSensorUltrasonic(IN_3);
+
+
+ while(true)
+ {
+  OnRevSync(OUT_BC, 50, 0);
+ 
+  if(SensorUS(IN_3) > 10)
+  {
+   OnFwdSync(OUT_BC, 50, 0);
+   Wait(500);
+   OnFwdSync(OUT_C, 50, 0);
+   Wait(500);
+  }
+ }
+}
